@@ -2,14 +2,53 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-// import Checkbox from '@mui/material/Checkbox';
 import { Button } from '@mui/material';
-import { Box } from '@mui/system';
+import axios from 'axios';
+
+const session_token = "f428d380583f81dff5d148c13da798bb9d59e9bf0f6862d137f0a19566d50626"
 
 export default function AddressForm() {
+  const handleSubmit = (event) =>{
+    event.preventDefault()
+    const data = new FormData(event.currentTarget)
+    const orderData = {
+    consignee_name: data.get('consigneeName'),
+    consignee_number: data.get('consigneeNumber'),
+    consignee_address: data.get('consigneeAddress'),
+    consignee_postal: data.get('consigneePostal'),
+    consignee_country: data.get('consigneeCountry'),
+    consignee_city: data.get('consigneeCity'),
+    consignee_state: data.get('consigneeState'),
+    consignee_province: data.get('consigneeProvince'),
+    consignee_email: data.get('consigneeEmail'),
+    length: data.get('length'),
+    width: data.get('width'),
+    height: data.get('height'),
+    weight: data.get('weight'),
+    payment_type: data.get('paymentType'),
+    pickup_contact_name: data.get('pickupName'),
+    pickup_contact_number: data.get('pickupNumber'),
+    pickup_address: data.get('pickupAddress'),
+    pickup_postal: data.get('pickupPostal'),
+    pickup_country: data.get('pickupCountry'),
+    pickup_city: data.get('pickupCity'),
+    pickup_state: data.get('pickupState'),
+    pickup_province: data.get('pickupProvince') ,
+    }
+    
+    console.log(orderData, 'data')
+
+    axios
+    .post("https://frontend-screening-v1.herokuapp.com/order", orderData, {
+      headers: {
+        'Authorization': session_token
+      }
+    })
+    .then(res => console.log(res))
+  }
   return (
     <React.Fragment>
+      <Grid container component="form" onSubmit={handleSubmit}>
       <Typography variant="h6" gutterBottom>
           Shipper Information
       </Typography>
@@ -21,7 +60,6 @@ export default function AddressForm() {
             name="pickupName"
             label="Name"
             fullWidth
-            autoComplete="given-name"
             variant="standard"
           />
         </Grid>
@@ -32,7 +70,6 @@ export default function AddressForm() {
             name="pickupNumber"
             label="Number"
             fullWidth
-            autoComplete="family-name"
             variant="standard"
           />
         </Grid>
@@ -54,12 +91,12 @@ export default function AddressForm() {
             name="pickupCity"
             label="City"
             fullWidth
-            autoComplete="shipping address-level2"
             variant="standard"
           />
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
+            required
             id="pickupState"
             name="pickupState"
             label="State"
@@ -69,6 +106,7 @@ export default function AddressForm() {
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
+            required
             id="pickupProvince"
             name="pickupProvince"
             label="Province"
@@ -83,7 +121,6 @@ export default function AddressForm() {
             name="pickupPostal"
             label="Postal code"
             fullWidth
-            autoComplete="shipping postal-code"
             variant="standard"
           />
         </Grid>
@@ -94,14 +131,13 @@ export default function AddressForm() {
             name="pickupCountry"
             label="Country"
             fullWidth
-            autoComplete="shipping country"
             variant="standard"
           />
         </Grid>
       </Grid>
       <br/>
-      <Typography variant="h6" gutterBottom>
-             Consignee Information
+      <Typography variant="h6"gutterBottom>
+        Consignee Information
       </Typography>
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
@@ -111,7 +147,6 @@ export default function AddressForm() {
             name="consigneeName"
             label="Name"
             fullWidth
-            autoComplete="given-name"
             variant="standard"
           />
         </Grid>
@@ -122,7 +157,16 @@ export default function AddressForm() {
             name="consigneeNumber"
             label="Number"
             fullWidth
-            autoComplete="family-name"
+            variant="standard"
+          />
+        </Grid>
+         <Grid item xs={12}>
+          <TextField
+            
+            id="consigneeEmail"
+            name="consigneeEmail"
+            label="Email"
+            fullWidth
             variant="standard"
           />
         </Grid>
@@ -133,7 +177,6 @@ export default function AddressForm() {
             name="consigneeAddress"
             label="Address"
             fullWidth
-            autoComplete="shipping address-line1"
             variant="standard"
           />
         </Grid>
@@ -144,7 +187,6 @@ export default function AddressForm() {
             name="consigneeCity"
             label="City"
             fullWidth
-            autoComplete="shipping address-level2"
             variant="standard"
           />
         </Grid>
@@ -159,8 +201,8 @@ export default function AddressForm() {
         </Grid>
         <Grid item xs={12} sm={4}>
           <TextField
-            id="consgineeProvince"
-            name="consgineeProvince"
+            id="consigneeProvince"
+            name="consigneeProvince"
             label="Province"
             fullWidth
             variant="standard"
@@ -173,18 +215,16 @@ export default function AddressForm() {
             name="consigneePostal"
             label="Postal code"
             fullWidth
-            autoComplete="shipping postal-code"
             variant="standard"
           />
         </Grid>
         <Grid item xs={12} sm={6}>
           <TextField
             required
-            id="country"
-            name="country"
+            id="consigneeCountry"
+            name="consigneeCountry"
             label="Country"
             fullWidth
-            autoComplete="shipping country"
             variant="standard"
           />
         </Grid>
@@ -194,9 +234,9 @@ export default function AddressForm() {
         Package Information
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <TextField
-            required
+            
             id="length"
             name="length"
             label="Length"
@@ -204,9 +244,9 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <TextField
-            required
+            
             id="width"
             name="width"
             label="Width"
@@ -214,9 +254,9 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <TextField
-            required
+            
             id="height"
             name="height"
             label="Height"
@@ -224,12 +264,22 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={3}>
+        <Grid item xs={12} sm={2}>
           <TextField
-            required
+            
             id="weight"
             name="weight"
             label="Weight"
+            fullWidth
+            variant="standard"
+          />
+        </Grid>
+        <Grid item xs={12} sm={4}>
+          <TextField
+            
+            id="paymentType"
+            name="paymentType"
+            label="Payment Type"
             fullWidth
             variant="standard"
           />
@@ -242,11 +292,12 @@ export default function AddressForm() {
       <Button
         variant="contained"
         size="small"
+        type="submit"
       // onClick={handleNext}
       >Submit
       </Button>
     </Grid>
-    
-    </React.Fragment>
+    </Grid>
+  </React.Fragment>
   );
 }

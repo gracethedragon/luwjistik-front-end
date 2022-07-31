@@ -3,11 +3,20 @@ import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
 import { Button } from '@mui/material';
+import { Box } from '@mui/system';
 import axios from 'axios';
+import { useState } from 'react';
+import { FormControl } from '@mui/material';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+
 
 const session_token = "f428d380583f81dff5d148c13da798bb9d59e9bf0f6862d137f0a19566d50626"
 
 export default function AddressForm() {
+  const [orderError, setOrderError] = useState("")
+  const [paymentType, setPaymentType] = useState("")
   const handleSubmit = (event) =>{
     event.preventDefault()
     const data = new FormData(event.currentTarget)
@@ -25,7 +34,7 @@ export default function AddressForm() {
     width: data.get('width'),
     height: data.get('height'),
     weight: data.get('weight'),
-    payment_type: data.get('paymentType'),
+    payment_type: paymentType,
     pickup_contact_name: data.get('pickupName'),
     pickup_contact_number: data.get('pickupNumber'),
     pickup_address: data.get('pickupAddress'),
@@ -37,18 +46,32 @@ export default function AddressForm() {
     }
     
     console.log(orderData, 'data')
-
+    
     axios
     .post("https://frontend-screening-v1.herokuapp.com/order", orderData, {
       headers: {
         'Authorization': session_token
       }
     })
-    .then(res => console.log(res))
+    .then(res => {
+      console.log(res)
+      window.location = "/dashboard";
+    })
+    .catch(error =>{
+      console.log(error.response)
+      setOrderError("Order submission failed. Please check fields again")
+    })
   }
   return (
     <React.Fragment>
-      <Grid container component="form" onSubmit={handleSubmit}>
+      {orderError !== "" &&
+      <Box>
+        <Typography variant="h6" gutterBottom>
+          {orderError}
+        </Typography>
+      </Box>
+      }
+      <Grid container component="form" onSubmit={handleSubmit} noValidate>
       <Typography variant="h6" gutterBottom>
           Shipper Information
       </Typography>
@@ -234,7 +257,24 @@ export default function AddressForm() {
         Package Information
       </Typography>
       <Grid container spacing={3}>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={4}>
+          <FormControl variant="standard" sx={{minWidth: 120 }}>
+          <InputLabel id="paymentType">Payment Type</InputLabel>
+          <Select
+            labelId="paymentType"
+            id="paymentType"
+            value={paymentType}
+            onChange={event=> setPaymentType(event.target.value)}
+            label="PaymentType"
+          >
+            <MenuItem value=""></MenuItem>
+            <MenuItem value={'COD'}>COD</MenuItem>
+            <MenuItem value={'prepaid'}>Prepaid</MenuItem>
+          </Select>
+          </FormControl>
+        </Grid>
+        <Grid item sm={8}></Grid>
+        <Grid item xs={12} sm={3}>
           <TextField
             
             id="length"
@@ -244,7 +284,7 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3}>
           <TextField
             
             id="width"
@@ -254,7 +294,7 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3}>
           <TextField
             
             id="height"
@@ -264,26 +304,18 @@ export default function AddressForm() {
             variant="standard"
           />
         </Grid>
-        <Grid item xs={12} sm={2}>
+        <Grid item xs={12} sm={3}>
           <TextField
-            
+            type="number" inputProps={{ min: 0, step: "1"}}
             id="weight"
             name="weight"
-            label="Weight"
+            label="Weight (g)"
             fullWidth
             variant="standard"
+            onChange={event => event.target.value < 0 ? event.target.value = 0 : event.target.value}
           />
         </Grid>
-        <Grid item xs={12} sm={4}>
-          <TextField
-            
-            id="paymentType"
-            name="paymentType"
-            label="Payment Type"
-            fullWidth
-            variant="standard"
-          />
-        </Grid>
+        
         <Grid item xs>
           
         </Grid>

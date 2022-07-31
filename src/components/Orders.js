@@ -7,64 +7,54 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const session_token = "f428d380583f81dff5d148c13da798bb9d59e9bf0f6862d137f0a19566d50626"
 
 // Generate Order Data
-function createData(order_id, pickup_country, consignee_country, payment_type, weight) {
+function createData({
+  consignee_address,
+  consignee_city,
+  consignee_country,
+  consignee_email,
+  consignee_name,
+  consignee_number,
+  consignee_postal,
+  consignee_province,
+  consignee_state,
+  height,
+  length,
+  order_id,
+  payment_type,
+  pickup_address,
+  pickup_city,
+  pickup_contact_name,
+  pickup_contact_number,
+  pickup_country,
+  pickup_postal,
+  pickup_province,
+  pickup_state,
+  user_id,
+  weight,
+  width}) {
   return { order_id, pickup_country, consignee_country, payment_type, weight };
 }
 
 
-
-const rows = [
-  createData(
-    0,
-    'SG',
-    'MY',
-    'card',
-    312.44,
-  ),
-  createData(
-    1,
-    'MY',
-    'ID',
-    'COD',
-    866.99,
-  ),
-  createData(
-    2, 
-    'SG', 
-    'MY', 
-    'card', 
-    100.81
-  ),
-  createData(
-    3,
-    'ID',
-    'MY',
-    'card',
-    654.39,
-  ),
-  createData(
-    4,
-    'MY',
-    'SG',
-    'card',
-    212.79,
-  ),
-];
-
-
 export default function Orders() {
-
-  axios
-  .get("https://frontend-screening-v1.herokuapp.com/order", {
-    headers:{
-      'Authorization': session_token
-    }
-  })
-  .then(res=>console.log(res))
+  const [rows, setRows] = useState([])
+  useEffect(()=>{
+    axios
+    .get("https://frontend-screening-v1.herokuapp.com/order", {
+      headers:{
+        'Authorization': session_token
+      }
+    })
+    .then(res=>{
+      console.log(res)
+      setRows(res.data.data.map((data)=> createData(data)))
+    })
+  }, [])
   return (
     <React.Fragment>
       <Title>Recent Orders</Title>

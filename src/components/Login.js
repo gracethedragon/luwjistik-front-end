@@ -24,14 +24,19 @@ export default function Login() {
   const handleSubmit = (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: md5(data.get('password')),
+    const loginData = ({
+      username: data.get('email'),
+      password: data.get('password'),
     });
 
     axios
-    .post("https://frontend-screening-v1.herokuapp.com/login", data)
-    .then(res => console.log(res))
+    .post("https://fe-screening.onrender.com/login", loginData)
+    .then(res => {
+      console.log(res)
+      sessionStorage.setItem('sessionToken', res.data.session);
+      window.location = "/dashboard"
+    })
+    .catch(error => console.log(error))
 
   };
 

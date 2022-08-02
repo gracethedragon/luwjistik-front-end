@@ -9,7 +9,7 @@ import Title from './Title';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-const session_token = "f428d380583f81dff5d148c13da798bb9d59e9bf0f6862d137f0a19566d50626"
+let session_token = sessionStorage.getItem('sessionToken');
 
 // Generate Order Data
 function createData({
@@ -43,9 +43,13 @@ function createData({
 
 export default function Orders() {
   const [rows, setRows] = useState([])
+  
   useEffect(()=>{
+    if (session_token === null) {
+      return window.location = "/";
+    }
     axios
-    .get("https://frontend-screening-v1.herokuapp.com/order", {
+    .get("https://fe-screening.onrender.com/orders", {
       headers:{
         'Authorization': session_token
       }

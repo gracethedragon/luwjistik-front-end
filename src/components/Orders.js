@@ -9,7 +9,7 @@ import Title from './Title';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 
-let session_token = sessionStorage.getItem('sessionToken');
+const session_token = sessionStorage.getItem('sessionToken');
 
 // Generate Order Data
 function createData({
@@ -45,9 +45,6 @@ export default function Orders() {
   const [rows, setRows] = useState([])
   
   useEffect(()=>{
-    if (session_token === null) {
-      return window.location = "/";
-    }
     axios
     .get("https://fe-screening.onrender.com/orders", {
       headers:{

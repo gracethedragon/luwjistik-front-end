@@ -38,11 +38,11 @@ export default function Login() {
     .post("https://fe-screening.onrender.com/login", loginData)
     .then(res => {
       console.log(res)
-      sessionStorage.setItem('sessionToken', res.data.session);
-      
-    }).then( res2 => {
-      console.log(res2, 'res2')
-      navigate('dashboard')
+      if (res.data.session) {
+        sessionStorage.setItem('sessionToken', res.data.session);
+        navigate('/dashboard')
+      }
+
     })
     .catch(error => {
       console.log(error)

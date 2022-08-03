@@ -15,12 +15,12 @@ import CreateOrder from './components/CreateOrder'
 const session_token = sessionStorage.getItem('sessionToken');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter basename={process.env.PUBLIC_URL}>
+  <BrowserRouter basename={process.env.PORT}>
     {/* <App /> */}
 			<Routes>
-				<Route path='' element={<LoginPage />} />
-        <Route path='dashboard' element={session_token?<Dashboard />: <Navigate to ="/"/>} />
-        <Route path='create' element={session_token ?<CreateOrder /> : <Navigate to ="/"/>} />
+				<Route path='/' element={<LoginPage />} />
+        <Route path='/dashboard' element={session_token?<Dashboard />: <Navigate to ="/"/>} />
+        <Route path='/create' element={session_token ?<CreateOrder /> : <Navigate to ="/"/>} />
 				
 			</Routes>
 	</BrowserRouter>

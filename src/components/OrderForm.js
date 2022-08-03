@@ -11,11 +11,12 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import InfoIcon from '@mui/icons-material/Info';
+import {useNavigate } from 'react-router';
 
 const session_token = sessionStorage.getItem('sessionToken');
 
 export default function AddressForm() {
-  const [height, setHeight] = useState("0.0")
+  const navigate = useNavigate()
   const [orderError, setOrderError] = useState("")
   const [paymentType, setPaymentType] = useState("")
   const handleSubmit = (event) =>{
@@ -46,7 +47,9 @@ export default function AddressForm() {
     })
     .then(res => {
       console.log(res)
-      window.location = "/dashboard";
+      if(res.status === 200) {
+      navigate('/dashboard')
+      }
     })
     .catch(error =>{
       console.log(error.response)

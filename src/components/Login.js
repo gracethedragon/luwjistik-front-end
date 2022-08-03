@@ -14,7 +14,7 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 
 
@@ -23,8 +23,16 @@ import { useState } from 'react';
 const theme = createTheme();
 
 export default function Login() {
-  const navigate = useNavigate()
+  const navigate = useNavigate()  
   const [loginError, setLoginError] = useState("")
+  const [login, setLogin] = useState(false)
+
+  useEffect(()=>{
+    if (login) {
+      navigate('/dashboard')
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [login])
   const handleSubmit = (event) => {
     
     event.preventDefault();
@@ -38,15 +46,19 @@ export default function Login() {
     .post("https://fe-screening.onrender.com/login", loginData)
     .then(res => {
       console.log(res)
-      sessionStorage.setItem('sessionToken', res.data.session)})
-    .then(res2 =>{
-      navigate('/dashboard')
+      sessionStorage.setItem('sessionToken', res.data.session)
+      console.log('set')
     })
     .catch(error => {
       console.log(error)
       setLoginError('Login error, please try again.')
+      
     })
-
+    .finally(()=> {
+      // navigate('/dashboard')
+      setLogin(true)
+      console.log('set')
+    })
   };
 
   return (

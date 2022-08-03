@@ -16,6 +16,8 @@ import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {mainListItems} from './listItems';
 import Orders from './Orders';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { Link } from 'react-router-dom';
 
 
 const drawerWidth = 240;
@@ -103,6 +105,17 @@ function DashboardContent() {
             >
               Dashboard
             </Typography>
+             <IconButton 
+              color="inherit"
+              component={Link} to="/login"
+              onClick={()=>{
+                console.log('clicked')
+                sessionStorage.removeItem('sessionToken')
+              }}>
+              
+                <LogoutIcon />
+              
+            </IconButton>
           </Toolbar>
         </AppBar>
         <Drawer variant="permanent" open={open}>

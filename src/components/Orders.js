@@ -43,6 +43,7 @@ function createData({
 
 export default function Orders() {
   const [rows, setRows] = useState([])
+  const [dataExist, setDataExist] = useState(false)
   
   useEffect(()=>{
     axios
@@ -53,7 +54,10 @@ export default function Orders() {
     })
     .then(res=>{
       console.log(res)
-      setRows(res.data.data.map((data)=> createData(data)))
+      if (res.data.data !== null) {
+        setRows(res.data.data.map((data)=> createData(data)))
+        setDataExist(true)
+      }
     })
   }, [])
   return (
@@ -70,7 +74,8 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {dataExist && 
+          rows.map((row) => (
             <TableRow key={row.order_id}>
               <TableCell>{row.order_id}</TableCell>
               <TableCell>{row.pickup_country}</TableCell>

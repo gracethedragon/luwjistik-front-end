@@ -1,5 +1,4 @@
 import * as React from 'react';
-import Link from '@mui/material/Link';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -10,36 +9,6 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 
 const session_token = sessionStorage.getItem('sessionToken');
-
-// Generate Order Data
-function createData({
-  consignee_address,
-  consignee_city,
-  consignee_country,
-  consignee_email,
-  consignee_name,
-  consignee_number,
-  consignee_postal,
-  consignee_province,
-  consignee_state,
-  height,
-  length,
-  order_id,
-  payment_type,
-  pickup_address,
-  pickup_city,
-  pickup_contact_name,
-  pickup_contact_number,
-  pickup_country,
-  pickup_postal,
-  pickup_province,
-  pickup_state,
-  user_id,
-  weight,
-  width}) {
-  return { order_id, pickup_country, consignee_country, payment_type, weight };
-}
-
 
 export default function Orders() {
   const [rows, setRows] = useState([])
@@ -54,8 +23,8 @@ export default function Orders() {
     })
     .then(res=>{
       console.log(res)
-      if (res.data.data !== null) {
-        setRows(res.data.data.map((data)=> createData(data)))
+      if (res.data.data?.length >= 1) {
+        setRows(res.data.data)
         setDataExist(true)
       }
     })
@@ -66,24 +35,30 @@ export default function Orders() {
       <Table size="small">
         <TableHead>
           <TableRow>
-            <TableCell>Order Id</TableCell>
-            <TableCell>Ship From</TableCell>
-            <TableCell>Ship To</TableCell>
-            <TableCell>Payment Method</TableCell>
-            <TableCell align="right">Weight</TableCell>
+            <TableCell>Tracking Number</TableCell>
+            <TableCell>Destination</TableCell>
+            <TableCell>Payment Type</TableCell>
+            <TableCell>Weight (kg)</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {dataExist && 
-          rows.map((row) => (
-            <TableRow key={row.order_id}>
-              <TableCell>{row.order_id}</TableCell>
-              <TableCell>{row.pickup_country}</TableCell>
-              <TableCell>{row.consignee_country}</TableCell>
-              <TableCell>{row.payment_type}</TableCell>
-              <TableCell align="right">{`${row.weight}`}</TableCell>
+
+          {dataExist ? 
+          rows.map(row => 
+            <TableRow key={row.TrackingNumber}>
+              <TableCell>{row.TrackingNumber}</TableCell>
+              <TableCell>{(row.ConsigneeCountry.toUpperCase())}</TableCell>
+              <TableCell>{row.PaymentType}</TableCell>
+              <TableCell>{(row.Weight).toFixed(1)}</TableCell>
             </TableRow>
-          ))}
+          ):
+          <TableRow>
+            <TableCell align="center" colSpan={4}>
+              No orders yet
+            </TableCell>
+          </TableRow>
+
+          } 
         </TableBody>
       </Table>
     </React.Fragment>

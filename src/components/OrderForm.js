@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import TextField from '@mui/material/TextField';
-import { Button } from '@mui/material';
+import { Button, IconButton, Tooltip } from '@mui/material';
 import { Box } from '@mui/system';
 import axios from 'axios';
 import { useState } from 'react';
@@ -10,30 +10,30 @@ import { FormControl } from '@mui/material';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-
+import InfoIcon from '@mui/icons-material/Info';
 
 const session_token = sessionStorage.getItem('sessionToken');
 
 export default function AddressForm() {
+  const [height, setHeight] = useState("0.0")
   const [orderError, setOrderError] = useState("")
   const [paymentType, setPaymentType] = useState("")
   const handleSubmit = (event) =>{
     event.preventDefault()
     const data = new FormData(event.currentTarget)
     const orderData = {
-    consigneeName: data.get('consigneeName'),
-    consigneeAddress: data.get('consigneeAddress'),
-    consigneeCity: data.get('consigneeCity'),
-    consigneeCountry: data.get('consigneeCountry'),
-    consigneePostalCode: data.get('consigneePostalCode'),
-    consigneeProvince: data.get('consigneeProvince'),
-    consigneeNumber: data.get('consigneeNumber'),
-    length: data.get('length'),
-    width: data.get('width'),
-    height: data.get('height'),
-    weight: data.get('weight'),
-    paymentType: paymentType,
-    
+    "consigneeName": data.get('consigneeName'),
+    "consigneeAddress": data.get('consigneeAddress'),
+    "consigneeCity": data.get('consigneeCity'),
+    "consigneeCountry": data.get('consigneeCountry'),
+    "consigneePostalCode": data.get('consigneePostalCode'),
+    "consigneeProvince": data.get('consigneeProvince'),
+    "consigneeNumber": data.get('consigneeNumber'),
+    "length": parseFloat(data.get('length')),
+    "width": parseFloat(data.get('width')),
+    "height": parseFloat(data.get('height')),
+    "weight": parseFloat(data.get('weight')),
+    "paymentType": paymentType,
     }
     
     console.log(orderData, 'data')
@@ -62,7 +62,7 @@ export default function AddressForm() {
         </Typography>
       </Box>
       }
-      <Grid container component="form" onSubmit={handleSubmit} noValidate>
+      <Grid container component="form" onSubmit={handleSubmit}>
      
       <Typography variant="h6"gutterBottom>
         Consignee Information
@@ -81,6 +81,7 @@ export default function AddressForm() {
         <Grid item xs={12} sm={6}>
           <TextField
             required
+            type="number"
             id="consigneeNumber"
             name="consigneeNumber"
             label="Number"
@@ -111,6 +112,7 @@ export default function AddressForm() {
        
         <Grid item xs={12} sm={3}>
           <TextField
+            required
             id="consigneeProvince"
             name="consigneeProvince"
             label="Province"
@@ -145,7 +147,13 @@ export default function AddressForm() {
       
       <Typography variant="h6" gutterBottom>
         Package Information
-      </Typography>
+        <Tooltip title = "Round details to 1 d.p.">
+          <IconButton>
+            <InfoIcon/>
+          </IconButton>
+        </Tooltip>
+      </Typography> 
+      
       <Grid container spacing={3}>
         <Grid item xs={12} sm={4}>
           <FormControl variant="standard" sx={{minWidth: 120 }}>
@@ -156,50 +164,59 @@ export default function AddressForm() {
             value={paymentType}
             onChange={event=> setPaymentType(event.target.value)}
             label="PaymentType"
+            required
           >
             <MenuItem value=""></MenuItem>
-            <MenuItem value={'COD'}>COD</MenuItem>
+            <MenuItem value={'cod'}>COD</MenuItem>
             <MenuItem value={'prepaid'}>Prepaid</MenuItem>
           </Select>
           </FormControl>
         </Grid>
-        <Grid item sm={8}></Grid>
+        <Grid item sm={8}>
+        </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            
+            required
+            type="number" inputProps={{ min: 0, step: 0.1}}
             id="length"
             name="length"
-            label="Length"
+            label="Length (cm)"
             fullWidth
             variant="standard"
+            onChange={event => event.target.value < 0 ? event.target.value = 0 : event.target.value}
           />
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            
+            required
+            type="number" inputProps={{ min: 0, step: 0.1}}
             id="width"
             name="width"
-            label="Width"
+            label="Width (cm)"
             fullWidth
             variant="standard"
+            onChange={event => event.target.value < 0 ? event.target.value = 0 : event.target.value}
           />
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            
+            required
+            type="number" inputProps={{min:0, step: 0.1}}
             id="height"
             name="height"
-            label="Height"
+            label="Height (cm)"
             fullWidth
             variant="standard"
+            onChange={event => event.target.value < 0 ? event.target.value = 0 : event.target.value}
           />
         </Grid>
         <Grid item xs={12} sm={3}>
           <TextField
-            type="number" inputProps={{ min: 0, step: "1"}}
+            required
+            type="number" inputProps={{ min: 0, step: 0.1}}
             id="weight"
             name="weight"
-            label="Weight (g)"
+            label="Weight (kg)"
             fullWidth
             variant="standard"
             onChange={event => event.target.value < 0 ? event.target.value = 0 : event.target.value}

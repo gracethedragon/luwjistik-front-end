@@ -13,6 +13,7 @@ const session_token = sessionStorage.getItem('sessionToken');
 export default function Orders() {
   const [rows, setRows] = useState([])
   const [dataExist, setDataExist] = useState(false)
+  const [loading, setLoading] = useState(true)
   
   useEffect(()=>{
     axios
@@ -23,9 +24,12 @@ export default function Orders() {
     })
     .then(res=>{
       console.log(res)
+      setLoading(false)
       if (res.data.data?.length >= 1) {
         setRows(res.data.data)
-        setDataExist(true)
+        setDataExist('exist')
+      } else {
+        setDataExist('no data')
       }
     })
   }, [])
@@ -42,8 +46,15 @@ export default function Orders() {
           </TableRow>
         </TableHead>
         <TableBody>
+          {loading &&
+          <TableRow>
+            <TableCell align="center" colSpan={4}>
+              Loading orders ...
+            </TableCell>
+          </TableRow>
+          }
 
-          {dataExist ? 
+          {dataExist === "exist" && 
           rows.map(row => 
             <TableRow key={row.TrackingNumber}>
               <TableCell>{row.TrackingNumber}</TableCell>
@@ -51,13 +62,13 @@ export default function Orders() {
               <TableCell>{row.PaymentType}</TableCell>
               <TableCell>{(row.Weight).toFixed(1)}</TableCell>
             </TableRow>
-          ):
+          )}
+          {dataExist === "no data" &&
           <TableRow>
             <TableCell align="center" colSpan={4}>
               No orders yet
             </TableCell>
           </TableRow>
-
           } 
         </TableBody>
       </Table>

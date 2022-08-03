@@ -15,7 +15,7 @@ import CreateOrder from './components/CreateOrder'
 const session_token = sessionStorage.getItem('sessionToken');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     {/* <App /> */}
 			<Routes>
 				<Route path='' element={<LoginPage />} />

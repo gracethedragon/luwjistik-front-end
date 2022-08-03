@@ -39,6 +39,9 @@ export default function Login() {
     .then(res => {
       console.log(res)
       sessionStorage.setItem('sessionToken', res.data.session);
+      
+    }).then( res2 => {
+      console.log(res2, 'res2')
       navigate('dashboard')
     })
     .catch(error => {

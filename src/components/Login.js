@@ -13,7 +13,9 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import axios from 'axios';
-import md5 from 'md5';
+import {useNavigate} from 'react-router-dom';
+import { useState } from 'react';
+
 
 
 
@@ -21,7 +23,10 @@ import md5 from 'md5';
 const theme = createTheme();
 
 export default function Login() {
+  const navigate = useNavigate()
+  const [loginError, setLoginError] = useState("")
   const handleSubmit = (event) => {
+    
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const loginData = ({
@@ -34,9 +39,12 @@ export default function Login() {
     .then(res => {
       console.log(res)
       sessionStorage.setItem('sessionToken', res.data.session);
-      window.location = "/dashboard"
+      navigate('dashboard')
     })
-    .catch(error => console.log(error))
+    .catch(error => {
+      console.log(error)
+      setLoginError('Login error, please try again.')
+    })
 
   };
 
@@ -58,7 +66,14 @@ export default function Login() {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          {loginError !== "" &&
+            <Box>
+              <Typography variant="h6" gutterBottom>
+                {loginError}
+              </Typography>
+            </Box>
+          }
+          <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
             <TextField
               margin="normal"
               required

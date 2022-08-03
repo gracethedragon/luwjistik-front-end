@@ -1,32 +1,28 @@
 import React, {lazy, Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
-// import App from './App';
+import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import LoginPage from './components/Login'
+import Dashboard from './components/Dashboard'
+import CreateOrder from './components/CreateOrder'
 
 
-const LoginPage = lazy(() => import ('./components/Login'))
-const Dashboard = lazy(() => import ('./components/Dashboard'))
-const CreateOrder = lazy(() => import ('./components/CreateOrder'))
+// const LoginPage = lazy(() => import ('./components/Login'))
+// const Dashboard = lazy(() => import ('./components/Dashboard'))
+// const CreateOrder = lazy(() => import ('./components/CreateOrder'))
 const session_token = sessionStorage.getItem('sessionToken');
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <BrowserRouter>
-		<Suspense
-			// fallback={
-			// 	<div>
-			// 		<CircularStatic />
-			// 	</div>
-			// }
-		>
+    {/* <App /> */}
 			<Routes>
-				<Route path='login' element={<LoginPage />} />
-        <Route path='dashboard' element={session_token?<Dashboard />: <Navigate to ="/login"/>} />
-        <Route path='create' element={session_token ?<CreateOrder /> : <Navigate to ="/login"/>} />
+				<Route path='' element={<LoginPage />} />
+        <Route path='dashboard' element={session_token?<Dashboard />: <Navigate to ="/"/>} />
+        <Route path='create' element={session_token ?<CreateOrder /> : <Navigate to ="/"/>} />
 				
 			</Routes>
-		</Suspense>
 	</BrowserRouter>
   // <React.StrictMode>
   //   <App />

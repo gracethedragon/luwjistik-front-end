@@ -107,7 +107,7 @@ function DashboardContent() {
             </Typography>
              <IconButton 
               color="inherit"
-              component={Link} to="/login"
+              component={Link} to="/"
               onClick={()=>{
                 console.log('clicked')
                 sessionStorage.removeItem('sessionToken')

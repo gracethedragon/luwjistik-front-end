@@ -17,10 +17,18 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {mainListItems} from './listItems';
 import Orders from './Orders';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router';
+import { useState,useEffect } from 'react';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CreateIcon from '@mui/icons-material/Create';
 
 
 const drawerWidth = 240;
+
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
@@ -68,7 +76,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function DashboardContent() {
+function DashboardContent({session}) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -133,9 +141,19 @@ function DashboardContent() {
           </Toolbar>
           <Divider />
           <List component="nav">
-            {mainListItems}
-            {/* <Divider sx={{ my: 1 }} />
-            {secondaryListItems} */}
+            {/* {mainListItems} */}
+            <ListItemButton component={Link} to="/dashboard" state={{sessionToken: session}}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard"  />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/create" state={{sessionToken: session}}>
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
+              <ListItemText primary="Create Order" />
+            </ListItemButton>
           </List>
         </Drawer>
         <Box
@@ -157,7 +175,7 @@ function DashboardContent() {
               {/* Recent Orders */}
               <Grid item xs={12}>
                 <Paper sx={{ p: 2, display: 'flex', flexDirection: 'column' }}>
-                  <Orders />
+                  <Orders/>
                 </Paper>
               </Grid>
             </Grid>
@@ -169,5 +187,16 @@ function DashboardContent() {
 }
 
 export default function Dashboard() {
-  return <DashboardContent />;
+  const [session, setSession] = useState(false)
+  
+  const location = useLocation()
+  const navigate = useNavigate()
+  console.log('run')
+  useEffect(()=>{
+    location.state === null ? navigate('/') : setSession(location.state?.sessionToken)
+    console.log(location.state?.sessionToken, 'session token')
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+  return <DashboardContent session={session} />;
 }

@@ -7,15 +7,20 @@ import TableRow from '@mui/material/TableRow';
 import Title from './Title';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router';
 
-const session_token = sessionStorage.getItem('sessionToken');
+// const session_token = sessionStorage.getItem('sessionToken');
 
-export default function Orders() {
+
+
+export default function Orders({session}) {
   const [rows, setRows] = useState([])
   const [dataExist, setDataExist] = useState(false)
   const [loading, setLoading] = useState(true)
-  
+  const location = useLocation()
+  const session_token = location.state?.sessionToken
   useEffect(()=>{
+    session_token && 
     axios
     .get("https://fe-screening.onrender.com/orders", {
       headers:{

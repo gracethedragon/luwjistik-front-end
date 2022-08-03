@@ -16,21 +16,19 @@ import axios from 'axios';
 import {useNavigate} from 'react-router-dom';
 import { useState, useEffect } from 'react';
 
-
-
-
-
 const theme = createTheme();
 
 export default function Login() {
   const navigate = useNavigate()  
   const [loginError, setLoginError] = useState("")
   const [login, setLogin] = useState(false)
+  const [sessionToken, setSessionToken] = useState(false)
+  
 
   useEffect(()=>{
-    if (login) {
-      navigate('/dashboard')
-    }
+    login && navigate('/dashboard', {state:{sessionToken }})
+    console.log('navigate', login)
+    
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [login])
   const handleSubmit = (event) => {
@@ -47,17 +45,17 @@ export default function Login() {
     .then(res => {
       console.log(res)
       sessionStorage.setItem('sessionToken', res.data.session)
-      console.log('set')
+      console.log(sessionStorage.getItem('sessionToken'))
+    })
+    .then(res2 =>{
+      console.log('res2', res2)
+      setSessionToken(sessionStorage.getItem('sessionToken'))
+      setLogin(true)
     })
     .catch(error => {
       console.log(error)
       setLoginError('Login error, please try again.')
       
-    })
-    .finally(()=> {
-      // navigate('/dashboard')
-      setLogin(true)
-      console.log('set')
     })
   };
 

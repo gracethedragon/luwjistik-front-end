@@ -17,7 +17,8 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import {mainListItems} from './listItems';
 import OrderForm from './OrderForm';
 import LogoutIcon from '@mui/icons-material/Logout';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
 
 const drawerWidth = 240;
 
@@ -165,5 +166,12 @@ function CreateOrderContent() {
 }
 
 export default function CreateOrder() {
+  const location = useLocation()
+  const navigate = useNavigate()
+  useEffect(()=>{
+    location.state === null && navigate('/') 
+    console.log(location.state?.sessionToken, 'session token')
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
   return <CreateOrderContent />;
 }

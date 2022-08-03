@@ -1,13 +1,12 @@
-import React, {lazy, Suspense} from 'react';
 import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './components/Login'
 import Dashboard from './components/Dashboard'
 import CreateOrder from './components/CreateOrder'
-
+import NotFound from './components/NotFound';
 
 
 
@@ -18,8 +17,8 @@ root.render(
 			<Routes>
 				<Route path='/' element={<LoginPage />} />
         <Route path='/dashboard' element={<Dashboard />} />
-        {/* <Route path='/dashboard' element={session_token?<Dashboard />: <Navigate to ="/"/>} /> */}
         <Route path='/create' element={<CreateOrder />}  />
+        <Route path="*" element={<NotFound /> }/>
 				
 			</Routes>
 	</BrowserRouter>

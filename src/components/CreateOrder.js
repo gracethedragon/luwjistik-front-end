@@ -14,11 +14,16 @@ import Grid from '@mui/material/Grid';
 import Paper from '@mui/material/Paper';
 import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import {mainListItems} from './listItems';
+
 import OrderForm from './OrderForm';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import ListItemButton from '@mui/material/ListItemButton';
+import ListItemIcon from '@mui/material/ListItemIcon';
+import ListItemText from '@mui/material/ListItemText';
+import DashboardIcon from '@mui/icons-material/Dashboard';
+import CreateIcon from '@mui/icons-material/Create';
 
 const drawerWidth = 240;
 
@@ -68,7 +73,7 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 
 const mdTheme = createTheme();
 
-function CreateOrderContent() {
+function CreateOrderContent({session}) {
   const [open, setOpen] = React.useState(true);
   const toggleDrawer = () => {
     setOpen(!open);
@@ -131,8 +136,20 @@ function CreateOrderContent() {
             </IconButton>
           </Toolbar>
           <Divider />
-          <List component="nav">
-            {mainListItems}
+           <List component="nav">
+            {/* {mainListItems} */}
+            <ListItemButton component={Link} to="/dashboard" state={{ sessionToken: session}}>
+              <ListItemIcon>
+                <DashboardIcon />
+              </ListItemIcon>
+              <ListItemText primary="Dashboard"  />
+            </ListItemButton>
+            <ListItemButton component={Link} to="/create" state={{sessionToken: session}}>
+              <ListItemIcon>
+                <CreateIcon />
+              </ListItemIcon>
+              <ListItemText primary="Create Order" />
+            </ListItemButton>
           </List>
         </Drawer>
         <Box
@@ -166,12 +183,13 @@ function CreateOrderContent() {
 }
 
 export default function CreateOrder() {
+  const [session, setSession] = useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   useEffect(()=>{
-    location.state === null && navigate('/') 
+    location.state === null ? navigate('/') : setSession(location.state?.sessionToken)
     console.log(location.state?.sessionToken, 'session token')
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-  return <CreateOrderContent />;
+  return <CreateOrderContent session={session} />;
 }

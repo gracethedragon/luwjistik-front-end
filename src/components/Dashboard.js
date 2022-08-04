@@ -78,6 +78,7 @@ const mdTheme = createTheme();
 
 function DashboardContent({session}) {
   const [open, setOpen] = React.useState(true);
+  console.log(session, 'session')
   const toggleDrawer = () => {
     setOpen(!open);
   };
@@ -142,7 +143,7 @@ function DashboardContent({session}) {
           <Divider />
           <List component="nav">
             {/* {mainListItems} */}
-            <ListItemButton component={Link} to="/dashboard" state={{sessionToken: session}}>
+            <ListItemButton component={Link} to="/dashboard" state={{ sessionToken: session}}>
               <ListItemIcon>
                 <DashboardIcon />
               </ListItemIcon>
